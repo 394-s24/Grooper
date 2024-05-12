@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Button } from "react-bootstrap";
+import { Button, Form, FormGroup, FormLabel, FormControl, Modal } from "react-bootstrap";
 import "./Home.css";
 import Regroup from "../../components/Regroup/Regroup";
 // import GroupAssignment from "../../components/Regroup/Regroup";
@@ -39,7 +39,11 @@ const randomNames = ["Stephen Curry", "Klay Thompson", "Kevin Durant", "LeBron J
 const Home = () => {
   const [subgroups, setSubgroups] = useState(initialSubgroups);
   const [swarm, setSwarm] = useState(null);
-  
+
+  const [numGroups, setNumGroups] = useState(initialSubgroups.length);
+  const [groupNames, setGroupNames] = useState(initialSubgroups.map(group => group.feature));
+  const [showModal, setShowModal] = useState(false);
+
   useEffect(() => {
     getSwarm().then((swarm) => setSwarm(swarm));
   }, []);
@@ -67,13 +71,61 @@ const Home = () => {
   
     setSubgroups(shuffledSubgroups);
   };
-  
-  
+
+  const handleGroupChange = (index, e) => {
+    const newSubgroups = [...initialSubgroups];
+    newSubgroups[index].feature = e.target.value;
+    setSubgroups(newSubgroups);
+  };
+
+  const handleNumGroupsChange = (e) => {
+    const value = parseInt(e.target.value, 10);
+    if (!isNaN(value)) {
+      setNumGroups(value);
+      const newSubgroups = [...initialSubgroups];
+      while (newSubgroups.length < value) {
+        newSubgroups.push({ id: newSubgroups.length + 1, feature: `Group ${newSubgroups.length + 1}`, members: [] });
+      }
+      if (newSubgroups.length > value) {
+        newSubgroups.splice(value);
+      }
+      setSubgroups(newSubgroups);
+    }
+  };
+
+  const handleUpdate = () => {
+    handleRegroup();
+    setShowModal(false);
+  };
 
   return (
     <div id="home-container">
       <div id="title">GROOPS!</div>
-      <div>Upcoming swarm: {new Date().toLocaleString()}</div>
+      <Button variant="primary" onClick={() => setShowModal(true)}>Customize Groups</Button>
+      <Modal show={showModal} onHide={() => setShowModal(false)}>
+        <Modal.Header closeButton>
+          <Modal.Title>Customize Groups</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <Form>
+            <FormGroup>
+              <FormLabel>Number of Groups:</FormLabel>
+              <FormControl type="number" value={numGroups} onChange={handleNumGroupsChange} />
+            </FormGroup>
+            {Array.from({ length: numGroups }).map((_, index) => (
+              <FormGroup key={index}>
+                <FormLabel>{`Group ${index + 1} Name:`}</FormLabel>
+                <FormControl type="text" value={initialSubgroups[index] ? initialSubgroups[index].feature : `Group ${index + 1}`} onChange={(e) => handleGroupChange(index, e)} />
+              </FormGroup>
+            ))}
+          </Form>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={() => setShowModal(false)}>Close</Button>
+          <Button variant="primary" onClick={handleUpdate}>Update</Button>
+        </Modal.Footer>
+      </Modal>
+      
       <div id="subgroups-container">
         {subgroups.map((subgroup) => (
           <Subgroup key={subgroup.id} subgroup={subgroup} />
