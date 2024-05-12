@@ -1,5 +1,3 @@
-import React from "react";
-
 function minimizeGroupTimes(times, k) {
   const n = times.length;
   let groups = Array.from({ length: n }, () => Math.floor(Math.random() * k));
@@ -54,24 +52,5 @@ function minimizeGroupTimes(times, k) {
   return { groups, finalTimes };
 }
 
-export default function GroupAssignment() {
-  // Example usage:
-  const times = [
-    [0, 2, 3, 4],
-    [2, 0, 5, 1],
-    [3, 5, 0, 2],
-    [4, 1, 2, 0],
-  ];
-  const k = 2;
-  const result = minimizeGroupTimes(times, k);
+export default minimizeGroupTimes;
 
-  return (
-    <div>
-      <h1>Group Assignment Results</h1>
-      <div>Groups: {JSON.stringify(result.groups)}</div>
-      <div>
-        Interaction Times per Group: {JSON.stringify(result.finalTimes)}
-      </div>
-    </div>
-  );
-}
