@@ -6,6 +6,7 @@ import Subgroup from "../../components/Subgroup/Subgroup";
 import getSwarm from "./getSwarm";
 import getUsers from "./getUsers";
 import setInitialSubgroup from "./setInitialSubgroup";
+import CreateGroups from "../../components/CreateGroups/createGroups";
 
 
 const initialSubgroups = [
@@ -58,7 +59,7 @@ const Home = () => {
     
   }, []);
 
-
+  console.log("subgroups", subgroups); 
   const handleRegroup = () => {
     console.log("Regroup button clicked");
     // console.log(GroupAssignment());
@@ -110,37 +111,14 @@ const Home = () => {
     <div id="home-container">
       <div id="title">GROOPS!</div>
       <Button variant="primary" onClick={() => setShowModal(true)}>Set Groups</Button>
-      <Modal show={showModal} onHide={() => setShowModal(false)}>
-        <Modal.Header closeButton>
-          <Modal.Title>Customize Groups</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          <Form>
-            <FormGroup>
-              <FormLabel>Number of Groups:</FormLabel>
-              <FormControl type="number" value={numGroups} onChange={handleNumGroupsChange} />
-            </FormGroup>
-            {Array.from({ length: numGroups }).map((_, index) => (
-              <FormGroup key={index}>
-                <FormLabel>{`Group ${index + 1} Name:`}</FormLabel>
-                <FormControl type="text" value={initialSubgroups[index] ? initialSubgroups[index].feature : `Group ${index + 1}`} onChange={(e) => handleGroupChange(index, e)} />
-              </FormGroup>
-            ))}
-          </Form>
-        </Modal.Body>
-        <Modal.Footer>
-          <Button variant="secondary" onClick={() => setShowModal(false)}>Close</Button>
-          <Button variant="primary" onClick={handleUpdate}>Update</Button>
-        </Modal.Footer>
-      </Modal>
-      
+      <CreateGroups showModal={showModal} setShowModal={setShowModal} setSubgroups={setSubgroups} users={users} maxGroups={maxGroups}/>
       <div id="subgroups-container">
         {subgroups.map((subgroup) => (
           <Subgroup key={subgroup.id} subgroup={subgroup} />
         ))}
       </div>
       <div id="home-buttons">
-        <Button onClick={handleRegroup}>Regroup</Button>
+        {/* <Button onClick={handleRegroup}>Regroup</Button> */}
       </div>
       <Regroup/>
     </div>
