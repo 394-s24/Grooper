@@ -9,32 +9,32 @@ import setInitialSubgroup from "./setInitialSubgroup";
 import CreateGroups from "../../components/CreateGroups/createGroups";
 
 
-const initialSubgroups = [
-  {
-    id: 1,
-    feature: "bricking threes",
-    members: [
-      { id: 1, name: "Stephen Curry" },
-      { id: 2, name: "Klay Thompson" },
-    ],
-  },
-  {
-    id: 2,
-    feature: "bricking threes",
-    members: [
-      { id: 3, name: "Kevin Durant" },
-      { id: 4, name: "LeBron James" },
-    ],
-  },
-  {
-    id: 3,
-    feature: "bricking threes",
-    members: [
-      { id: 5, name: "Giannis Antetokounmpo" },
-      { id: 6, name: "Stephen Curry" },
-    ],
-  }
-];
+// const initialSubgroups = [
+//   {
+//     id: 1,
+//     feature: "bricking threes",
+//     members: [
+//       { id: 1, name: "Stephen Curry" },
+//       { id: 2, name: "Klay Thompson" },
+//     ],
+//   },
+//   {
+//     id: 2,
+//     feature: "bricking threes",
+//     members: [
+//       { id: 3, name: "Kevin Durant" },
+//       { id: 4, name: "LeBron James" },
+//     ],
+//   },
+//   {
+//     id: 3,
+//     feature: "bricking threes",
+//     members: [
+//       { id: 5, name: "Giannis Antetokounmpo" },
+//       { id: 6, name: "Stephen Curry" },
+//     ],
+//   }
+// ];
 
 const randomNames = ["Stephen Curry", "Klay Thompson", "Kevin Durant", "LeBron James", "Giannis Antetokounmpo"];
 
@@ -50,7 +50,7 @@ const Home = () => {
 
   useEffect(() => {
     // getSwarm().then((swarm) => setSwarm(swarm));
-    getUsers().then((users) => {
+      getUsers().then((users) => {
       setUsers(users);
       setMaxGroups(users.length);
       setSubgroups([setInitialSubgroup(users)]);
@@ -60,52 +60,52 @@ const Home = () => {
   }, []);
 
   console.log("subgroups", subgroups); 
-  const handleRegroup = () => {
-    console.log("Regroup button clicked");
-    // console.log(GroupAssignment());
-    // Shuffle the array of random names
-    const shuffledNames = randomNames.sort(() => Math.random() - 0.5);
+  // const handleRegroup = () => {
+  //   console.log("Regroup button clicked");
+  //   // console.log(GroupAssignment());
+  //   // Shuffle the array of random names
+  //   const shuffledNames = randomNames.sort(() => Math.random() - 0.5);
   
-    // Calculate the number of members per subgroup
-    const membersPerSubgroup = Math.ceil(randomNames.length / initialSubgroups.length);
+  //   // Calculate the number of members per subgroup
+  //   const membersPerSubgroup = Math.ceil(randomNames.length / initialSubgroups.length);
   
-    // Distribute shuffled names evenly among subgroups and assign unique IDs to each member
-    const shuffledSubgroups = initialSubgroups.map((subgroup) => ({
-      id: subgroup.id,
-      feature: subgroup.feature,
-      members: shuffledNames
-        .slice(subgroup.id * membersPerSubgroup, (subgroup.id + 1) * membersPerSubgroup)
-        .map((name, index) => ({ id: index + 1, name })) // Assign unique IDs to each member
-    }));
+  //   // Distribute shuffled names evenly among subgroups and assign unique IDs to each member
+  //   const shuffledSubgroups = initialSubgroups.map((subgroup) => ({
+  //     id: subgroup.id,
+  //     feature: subgroup.feature,
+  //     members: shuffledNames
+  //       .slice(subgroup.id * membersPerSubgroup, (subgroup.id + 1) * membersPerSubgroup)
+  //       .map((name, index) => ({ id: index + 1, name })) // Assign unique IDs to each member
+  //   }));
   
-    setSubgroups(shuffledSubgroups);
-  };
+  //   setSubgroups(shuffledSubgroups);
+  // };
 
-  const handleGroupChange = (index, e) => {
-    const newSubgroups = [...initialSubgroups];
-    newSubgroups[index].feature = e.target.value;
-    setSubgroups(newSubgroups);
-  };
+  // const handleGroupChange = (index, e) => {
+  //   const newSubgroups = [...initialSubgroups];
+  //   newSubgroups[index].feature = e.target.value;
+  //   setSubgroups(newSubgroups);
+  // };
 
-  const handleNumGroupsChange = (e) => {
-    const value = parseInt(e.target.value, 10);
-    if (!isNaN(value)) {
-      setNumGroups(value);
-      const newSubgroups = [...initialSubgroups];
-      while (newSubgroups.length < value) {
-        newSubgroups.push({ id: newSubgroups.length + 1, feature: `Group ${newSubgroups.length + 1}`, members: [] });
-      }
-      if (newSubgroups.length > value) {
-        newSubgroups.splice(value);
-      }
-      setSubgroups(newSubgroups);
-    }
-  };
+  // const handleNumGroupsChange = (e) => {
+  //   const value = parseInt(e.target.value, 10);
+  //   if (!isNaN(value)) {
+  //     setNumGroups(value);
+  //     const newSubgroups = [...initialSubgroups];
+  //     while (newSubgroups.length < value) {
+  //       newSubgroups.push({ id: newSubgroups.length + 1, feature: `Group ${newSubgroups.length + 1}`, members: [] });
+  //     }
+  //     if (newSubgroups.length > value) {
+  //       newSubgroups.splice(value);
+  //     }
+  //     setSubgroups(newSubgroups);
+  //   }
+  // };
 
-  const handleUpdate = () => {
-    handleRegroup();
-    setShowModal(false);
-  };
+  // const handleUpdate = () => {
+  //   handleRegroup();
+  //   setShowModal(false);
+  // };
 
   return (
     <div id="home-container">
