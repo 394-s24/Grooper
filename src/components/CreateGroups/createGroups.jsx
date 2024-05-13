@@ -27,8 +27,6 @@ const CreateGroups = ({ showModal, setShowModal }) => {
     }
   };
 
-  console.log("test");
-
   const handleUpdate = async () => {
     await createBestGroups("-NxK37qfhhv5HqlXvWQc", groupNames, numGroups);
     setShowModal(false);
