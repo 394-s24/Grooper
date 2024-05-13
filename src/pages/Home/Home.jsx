@@ -2,10 +2,11 @@ import React, { useState, useEffect } from "react";
 import { Button, Form, FormGroup, FormLabel, FormControl, Modal } from "react-bootstrap";
 import "./Home.css";
 import Regroup from "../../components/Regroup/Regroup";
-// import GroupAssignment from "../../components/Regroup/Regroup";
 import Subgroup from "../../components/Subgroup/Subgroup";
 import getSwarm from "./getSwarm";
-// import GroupAssignment from "../../components/Regroup/AssignGroups";
+import getUsers from "./getUsers";
+import setInitialSubgroup from "./setInitialSubgroup";
+
 
 const initialSubgroups = [
   {
@@ -37,20 +38,27 @@ const initialSubgroups = [
 const randomNames = ["Stephen Curry", "Klay Thompson", "Kevin Durant", "LeBron James", "Giannis Antetokounmpo"];
 
 const Home = () => {
-  const [subgroups, setSubgroups] = useState(initialSubgroups);
+  const [subgroups, setSubgroups] = useState([]);
   const [swarm, setSwarm] = useState(null);
+  const [users, setUsers] = useState([]);
 
-  const [numGroups, setNumGroups] = useState(initialSubgroups.length);
-  const [groupNames, setGroupNames] = useState(initialSubgroups.map(group => group.feature));
+  const [numGroups, setNumGroups] = useState(0);
+  const [maxGroups, setMaxGroups] = useState(0);
+  const [groupNames, setGroupNames] = useState([]);
   const [showModal, setShowModal] = useState(false);
 
   useEffect(() => {
-    getSwarm().then((swarm) => setSwarm(swarm));
+    // getSwarm().then((swarm) => setSwarm(swarm));
+    getUsers().then((users) => {
+      setUsers(users);
+      setMaxGroups(users.length);
+      setSubgroups([setInitialSubgroup(users)]);
+      setNumGroups(1);
+    });
+    
   }, []);
 
-  console.log(swarm);
 
-  // console.log(GroupAssignment());
   const handleRegroup = () => {
     console.log("Regroup button clicked");
     // console.log(GroupAssignment());
@@ -101,7 +109,7 @@ const Home = () => {
   return (
     <div id="home-container">
       <div id="title">GROOPS!</div>
-      <Button variant="primary" onClick={() => setShowModal(true)}>Customize Groups</Button>
+      <Button variant="primary" onClick={() => setShowModal(true)}>Set Groups</Button>
       <Modal show={showModal} onHide={() => setShowModal(false)}>
         <Modal.Header closeButton>
           <Modal.Title>Customize Groups</Modal.Title>
@@ -133,7 +141,6 @@ const Home = () => {
       </div>
       <div id="home-buttons">
         <Button onClick={handleRegroup}>Regroup</Button>
-        <Button>Save</Button>
       </div>
       <Regroup/>
     </div>
