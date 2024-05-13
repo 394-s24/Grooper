@@ -3,6 +3,11 @@ import minimizeGroupTimes from "../../utils/minimizeGroupTimes";
 import getUsers from "../../firebase/getUsers";
 
 const createBestGroups = async (swarmId, groupNames, numGroups) => {
+  if (numGroups === 0) {
+    await setData(`/swarms/${swarmId}/subswarms`, null);
+    return;
+  }
+
   const users = await getUsers();
   const metricsSnapshot = await getData(`metrics`);
   const data = metricsSnapshot.val();

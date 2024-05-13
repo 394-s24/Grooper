@@ -7,7 +7,10 @@ const getUsers = async () => {
     return [];
   }
 
-  return Object.values(usersSnapshot.val());
+  return Object.keys(usersSnapshot.val()).map((id) => ({
+    id,
+    ...usersSnapshot.val()[id],
+  }));
 };
 
 export default getUsers;
