@@ -15,6 +15,8 @@ function minimizeGroupTimes(times, k) {
   
     while (improvement) {
       improvement = false;
+
+      // For each person on our wider team
       for (let i = 0; i < n; i++) {
         const currentGroup = groups[i];
         let bestGroup = currentGroup;
@@ -37,6 +39,7 @@ function minimizeGroupTimes(times, k) {
   
             // Calculate change if moved to new group
             const change = potentialNewContribution - currentContribution;
+            console.log(change);
             if (change < bestDecrease) {
               bestDecrease = change;
               bestGroup = g;
@@ -53,7 +56,6 @@ function minimizeGroupTimes(times, k) {
         }
       }
     }
-  
     // Calculate final group interaction times
     const finalTimes = new Array(k).fill(0);
     groups.forEach((group, i) => {

@@ -1,6 +1,7 @@
 import { getData, setData } from "../../firebase/utils";
 import minimizeGroupTimes from "../../utils/minimizeGroupTimes";
 import getUsers from "../../firebase/getUsers";
+import minimizeTimes from "../../utils/minimizeTimes";
 
 const createBestGroups = async (swarmId, groupNames, numGroups) => {
   if (numGroups === 0) {
@@ -12,7 +13,6 @@ const createBestGroups = async (swarmId, groupNames, numGroups) => {
   const metricsSnapshot = await getData(`metrics`);
   const data = metricsSnapshot.val();
   const table = Array(users.length).fill(Array(users.length).fill(0));
-
   const indexToId = {};
   const idToIndex = {};
 
@@ -37,7 +37,8 @@ const createBestGroups = async (swarmId, groupNames, numGroups) => {
     });
   });
 
-  const minimizedGroups = minimizeGroupTimes(table, numGroups).groups;
+  // const minimizedGroups = minimizeGroupTimes(table, numGroups).groups;
+  const minimizedGroups = minimizeTimes(table, numGroups).groups;
 
   const groups = groupNames.map((groupName, idx) => ({
     id: idx,
