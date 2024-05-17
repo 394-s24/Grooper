@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 import "./Subgroup.css";
 import getNamesFromIds from "../../firebase/getNamesFromIds";
+import Table from "../Table/Table";
 
-// feature will be the firebase object
 const Subgroup = ({ subgroup }) => {
   const [names, setNames] = useState([]);
 
@@ -12,14 +12,7 @@ const Subgroup = ({ subgroup }) => {
     });
   }, [subgroup.members]);
 
-  return (
-    <div className="subgroup-container">
-      <h2 className="subgroup-feature">{subgroup.topic}</h2>
-      {names.map((name, idx) => (
-        <div key={idx}>{name}</div>
-      ))}
-    </div>
-  );
+  return <Table title={subgroup.topic} names={names} />;
 };
 
 export default Subgroup;

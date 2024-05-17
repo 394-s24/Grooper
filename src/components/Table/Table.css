@@ -1,0 +1,26 @@
+.table-container {
+  border-width: 1px;
+  border-style: solid;
+  border-radius: 10px;
+}
+
+.table-feature {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-width: 0px 0px 1px 0px;
+  border-style: solid;
+
+  padding: 5px;
+}
+
+.table-feature > h2 {
+  margin: 0;
+  padding: 0;
+}
+
+.table-button {
+  position: absolute;
+  right: 15px;
+}

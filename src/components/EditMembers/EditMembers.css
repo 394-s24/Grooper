@@ -1,0 +1,15 @@
+.edit-members-list {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.edit-members-user {
+  display: flex;
+  gap: 10px;
+}
+
+.edit-members-placeholder {
+  display: flex;
+  flex: 1;
+}
