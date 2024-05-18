@@ -29,9 +29,9 @@ const CreateGroups = ({ showModal, setShowModal }) => {
       setError("");
       setGroupNames([]);
     } else {
-      const numberOfGroups = parseInt(value, 10);
-      if (isNaN(numberOfGroups) || numberOfGroups < 0) {
-        setError("Please enter a valid number.");
+      const numberOfGroups = parseFloat(value);
+      if (isNaN(numberOfGroups) || numberOfGroups < 0 || numberOfGroups % 1 != 0) {
+        setError("Please enter a valid integer.");
         setGroupNames([]);
       } else {
         setError("");
