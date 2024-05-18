@@ -6,12 +6,14 @@ import {
   FormLabel,
   FormControl,
   Modal,
+  Alert,
 } from "react-bootstrap";
 import createBestGroups from "./createBestGroups";
 
 const CreateGroups = ({ showModal, setShowModal }) => {
-  const [numGroups, setNumGroups] = useState(0);
+  const [numGroups, setNumGroups] = useState("");
   const [groupNames, setGroupNames] = useState([]);
+  const [error, setError] = useState("");
 
   const handleGroupChange = (index, e) => {
     const newGroupNames = [...groupNames];
@@ -20,16 +22,32 @@ const CreateGroups = ({ showModal, setShowModal }) => {
   };
 
   const handleNumGroupsChange = (e) => {
-    const value = parseInt(e.target.value, 10);
-    if (!isNaN(value)) {
-      setNumGroups(value);
-      setGroupNames(Array(value).fill(""));
+    const value = e.target.value;
+    setNumGroups(value);
+
+    if (value === "") {
+      setError("");
+      setGroupNames([]);
+    } else {
+      const numberOfGroups = parseInt(value, 10);
+      if (isNaN(numberOfGroups) || numberOfGroups < 0) {
+        setError("Please enter a valid number.");
+        setGroupNames([]);
+      } else {
+        setError("");
+        setGroupNames(Array(numberOfGroups).fill(""));
+      }
     }
   };
 
   const handleUpdate = async () => {
-    await createBestGroups("-NxK37qfhhv5HqlXvWQc", groupNames, numGroups);
-    setShowModal(false);
+    const numberOfGroups = parseInt(numGroups, 10);
+    if (!isNaN(numberOfGroups) && numberOfGroups >= 0) {
+      await createBestGroups("-NxK37qfhhv5HqlXvWQc", groupNames, numberOfGroups);
+      setShowModal(false);
+    } else {
+      setError("Please enter a valid number of tasks.");
+    }
   };
 
   return (
@@ -39,19 +57,22 @@ const CreateGroups = ({ showModal, setShowModal }) => {
       </Modal.Header>
       <Modal.Body>
         <Form>
-          <FormGroup>
+          <FormGroup style={{ marginBottom: "15px" }}>
             <FormLabel>Number of Tasks:</FormLabel>
             <FormControl
               type="number"
               value={numGroups}
               onChange={handleNumGroupsChange}
+              min="0"
             />
           </FormGroup>
-          {Array.from({ length: numGroups }).map((_, index) => (
-            <FormGroup key={index}>
+          {error && <Alert variant="danger">{error}</Alert>}
+          {!error && Array.from({ length: numGroups === '' ? 0 : parseInt(numGroups, 10) }).map((_, index) => (
+            <FormGroup key={index} style={{ marginBottom: "15px" }}>
               <FormLabel>{`Task ${index + 1}:`}</FormLabel>
               <FormControl
                 type="text"
+                value={groupNames[index] || ""}
                 onChange={(e) => handleGroupChange(index, e)}
               />
             </FormGroup>

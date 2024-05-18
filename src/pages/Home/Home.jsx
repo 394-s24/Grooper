@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Button } from "react-bootstrap";
 import "./Home.css";
 import Subgroup from "../../components/Subgroup/Subgroup";
-import CreateGroups from "../../components/CreateGroups/CreateGroups";
+import CreateGroups from "../../components/CreateGroups/createGroups";
 import { getDatabase, onValue, ref } from "firebase/database";
 import getUsers from "../../firebase/getUsers";
 import Table from "../../components/Table/Table";
