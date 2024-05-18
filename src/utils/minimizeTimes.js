@@ -25,8 +25,6 @@ function minimizeTimes(times, k) {
             return acc + (groups[j] === currentGroup && i !== j ? time : 0);
           }, 0);
 
-        console.log("Current base contribution for ", i, ":",currentContribution);
-
         // Try moving to another group
         for (let g = 0; g < k; g++) {
             if (g === currentGroup) continue;
@@ -46,7 +44,6 @@ function minimizeTimes(times, k) {
                     return acc + (groups[l] === g && indices[j] !== l ? time : 0);
                   }, 0);
 
-                console.log("Current contribution for ", indices[j], ":",currentContributionG);
 
                 // swap the ith member with the jth member
                 const temp = groups[i];
@@ -58,22 +55,20 @@ function minimizeTimes(times, k) {
                     return acc + (groups[l] === groups[i] && i !== l ? time : 0);
                   }, 0);
 
-                console.log("New contribution for ", i, ":",newContribution);
 
                 // calculate the new contribution of the jth member
                 const newContributionG = times[indices[j]].reduce((acc, time, l) => {
                     return acc + (groups[l] === groups[indices[j]] && indices[j] !== l ? time : 0);
                   }, 0);
 
-                console.log("New contribution for ", indices[j], ":",newContributionG);
 
                 // calculate the change in contribution
                 const change = newContribution - currentContribution + newContributionG - currentContributionG;
-                console.log(change);
 
                 // if the change is negative, keep the swap
                 if (change < 0) {
                     improvement = true;
+                    console.log("improvement")
                     break;
                 } else {
                     // otherwise, swap back

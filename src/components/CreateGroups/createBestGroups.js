@@ -12,7 +12,10 @@ const createBestGroups = async (swarmId, groupNames, numGroups) => {
   const users = await getUsers();
   const metricsSnapshot = await getData(`metrics`);
   const data = metricsSnapshot.val();
-  const table = Array(users.length).fill(Array(users.length).fill(0));
+  const table = [];
+  for (let i = 0; i < users.length; i++) {
+    table.push(new Array(users.length).fill(0));
+  }
   const indexToId = {};
   const idToIndex = {};
 
@@ -31,11 +34,13 @@ const createBestGroups = async (swarmId, groupNames, numGroups) => {
   Object.keys(data).forEach((user) => {
     const i = idToIndex[user];
     table[i][i] = 0;
+    console.log(data[user]);
     Object.keys(data[user]).forEach((user2) => {
       const j = idToIndex[user2];
       table[i][j] = data[user][user2];
     });
   });
+
 
   // const minimizedGroups = minimizeGroupTimes(table, numGroups).groups;
   const minimizedGroups = minimizeTimes(table, numGroups).groups;

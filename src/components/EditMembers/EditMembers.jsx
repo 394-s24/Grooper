@@ -17,8 +17,8 @@ const EditMembers = ({ showModal, setShowModal }) => {
       </Modal.Header>
       <Modal.Body>
         <div className="edit-members-list">
-          {users.map((user) => (
-            <div className="edit-members-user">
+          {users.map((user, id) => (
+            <div className="edit-members-user" key={id}>
               <FormControl
                 type="text"
                 placeholder="Search"
