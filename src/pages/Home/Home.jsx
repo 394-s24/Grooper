@@ -60,7 +60,7 @@ const Home = () => {
         {/* <Button onClick={handleRegroup}>Regroup</Button> */}
       </div>
       {/* <Regroup /> */}
-      <CreateGroups showModal={showModal} setShowModal={setShowModal} />
+      <CreateGroups showModal={showModal} setShowModal={setShowModal} names={names}/>
       <EditMembers showModal={showEditModal} setShowModal={setShowEditModal} />
     </div>
   );

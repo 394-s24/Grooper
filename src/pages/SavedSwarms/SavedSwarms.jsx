@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Card, Accordion, Button } from 'react-bootstrap';
-import getAllSwarms from '../../firebase/utils';
+import getAllSwarms from './getAllSwarms';
 
 const SwarmDisplay = () => {
   const [swarms, setSwarms] = useState([]);
@@ -12,7 +12,7 @@ const SwarmDisplay = () => {
         setSwarms(Object.entries(swarmsData).map(([id, data]) => ({ id, ...data })));
       }
     };
-
+    console.log("fetching swarms");
     fetchSwarms();
   }, []);
 

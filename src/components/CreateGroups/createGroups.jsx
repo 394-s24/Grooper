@@ -10,7 +10,7 @@ import {
 } from "react-bootstrap";
 import createBestGroups from "./createBestGroups";
 
-const CreateGroups = ({ showModal, setShowModal }) => {
+const CreateGroups = ({ showModal, setShowModal, names }) => {
   const [numGroups, setNumGroups] = useState("");
   const [groupNames, setGroupNames] = useState([]);
   const [error, setError] = useState("");
@@ -42,10 +42,13 @@ const CreateGroups = ({ showModal, setShowModal }) => {
 
   const handleUpdate = async () => {
     const numberOfGroups = parseInt(numGroups, 10);
-    if (!isNaN(numberOfGroups) && numberOfGroups >= 0) {
+    if (!isNaN(numberOfGroups) && numberOfGroups >= 0 && numberOfGroups <= names.length / 2) {
       await createBestGroups("-NxK37qfhhv5HqlXvWQc", groupNames, numberOfGroups);
       setShowModal(false);
-    } else {
+    } if (numberOfGroups > names.length / 2) {
+      setError("Number of tasks cannot exceed half the number of members.");
+    }
+    else {
       setError("Please enter a valid number of tasks.");
     }
   };
