@@ -29,28 +29,20 @@ const CreateGroups = ({ showModal, setShowModal, names }) => {
       setError("");
       setGroupNames([]);
     } else {
-      const numberOfGroups = parseFloat(value);
-      if (isNaN(numberOfGroups) || numberOfGroups < 0 || numberOfGroups % 1 != 0) {
-        setError("Please enter a valid integer.");
-        setGroupNames([]);
-      } else {
-        setError("");
-        setGroupNames(Array(numberOfGroups).fill(""));
-      }
+      const numberOfGroups = parseInt(value, 10);
+      setError("");
+      setGroupNames(Array(numberOfGroups).fill(""));
     }
   };
 
   const handleUpdate = async () => {
     const numberOfGroups = parseInt(numGroups, 10);
-    if (!isNaN(numberOfGroups) && numberOfGroups >= 0 && numberOfGroups <= names.length / 2) {
-      await createBestGroups("-NxK37qfhhv5HqlXvWQc", groupNames, numberOfGroups);
-      setShowModal(false);
-    } if (numberOfGroups > names.length / 2) {
-      setError("Number of tasks cannot exceed half the number of members.");
+    if (groupNames.some((name) => name.trim() === "")) {
+      setError("All task names must be filled out.");
+      return;
     }
-    else {
-      setError("Please enter a valid number of tasks.");
-    }
+    await createBestGroups("-NxK37qfhhv5HqlXvWQc", groupNames, numberOfGroups);
+    setShowModal(false);
   };
 
   return (
@@ -62,24 +54,31 @@ const CreateGroups = ({ showModal, setShowModal, names }) => {
         <Form>
           <FormGroup style={{ marginBottom: "15px" }}>
             <FormLabel>Number of Tasks:</FormLabel>
-            <FormControl
-              type="number"
-              value={numGroups}
-              onChange={handleNumGroupsChange}
-              min="0"
-            />
+            <Form.Control as="select" value={numGroups} onChange={handleNumGroupsChange}>
+              <option value="">Select number of tasks</option>
+              {[...Array(Math.floor(names.length / 2) + 1).keys()]
+                .filter(num => num >= 2)
+                .map((num) => (
+                  <option key={num} value={num}>
+                    {num}
+                  </option>
+                ))}
+            </Form.Control>
           </FormGroup>
           {error && <Alert variant="danger">{error}</Alert>}
-          {!error && Array.from({ length: numGroups === '' ? 0 : parseInt(numGroups, 10) }).map((_, index) => (
-            <FormGroup key={index} style={{ marginBottom: "15px" }}>
-              <FormLabel>{`Task ${index + 1}:`}</FormLabel>
-              <FormControl
-                type="text"
-                value={groupNames[index] || ""}
-                onChange={(e) => handleGroupChange(index, e)}
-              />
-            </FormGroup>
-          ))}
+          {!error &&
+            Array.from({ length: numGroups === "" ? 0 : parseInt(numGroups, 10) }).map(
+              (_, index) => (
+                <FormGroup key={index} style={{ marginBottom: "15px" }}>
+                  <FormLabel>{`Task ${index + 1}:`}</FormLabel>
+                  <FormControl
+                    type="text"
+                    value={groupNames[index] || ""}
+                    onChange={(e) => handleGroupChange(index, e)}
+                  />
+                </FormGroup>
+              )
+            )}
         </Form>
       </Modal.Body>
       <Modal.Footer>
