@@ -41,7 +41,8 @@ const CreateGroups = ({ showModal, setShowModal, names }) => {
       setError("All task names must be filled out.");
       return;
     }
-    await createBestGroups("-NxK37qfhhv5HqlXvWQc", groupNames, numberOfGroups);
+
+    await createBestGroups(groupNames, numberOfGroups);
     setShowModal(false);
   };
 
@@ -54,10 +55,14 @@ const CreateGroups = ({ showModal, setShowModal, names }) => {
         <Form>
           <FormGroup style={{ marginBottom: "15px" }}>
             <FormLabel>Number of Tasks:</FormLabel>
-            <Form.Control as="select" value={numGroups} onChange={handleNumGroupsChange}>
+            <Form.Control
+              as="select"
+              value={numGroups}
+              onChange={handleNumGroupsChange}
+            >
               <option value="">Select number of tasks</option>
               {[...Array(Math.floor(names.length / 2) + 1).keys()]
-                .filter(num => num >= 2)
+                .filter((num) => num >= 2)
                 .map((num) => (
                   <option key={num} value={num}>
                     {num}
@@ -65,20 +70,20 @@ const CreateGroups = ({ showModal, setShowModal, names }) => {
                 ))}
             </Form.Control>
           </FormGroup>
+
+          {Array.from({
+            length: numGroups === "" ? 0 : parseInt(numGroups, 10),
+          }).map((_, index) => (
+            <FormGroup key={index} style={{ marginBottom: "15px" }}>
+              <FormLabel>{`Task ${index + 1}:`}</FormLabel>
+              <FormControl
+                type="text"
+                value={groupNames[index] || ""}
+                onChange={(e) => handleGroupChange(index, e)}
+              />
+            </FormGroup>
+          ))}
           {error && <Alert variant="danger">{error}</Alert>}
-          {!error &&
-            Array.from({ length: numGroups === "" ? 0 : parseInt(numGroups, 10) }).map(
-              (_, index) => (
-                <FormGroup key={index} style={{ marginBottom: "15px" }}>
-                  <FormLabel>{`Task ${index + 1}:`}</FormLabel>
-                  <FormControl
-                    type="text"
-                    value={groupNames[index] || ""}
-                    onChange={(e) => handleGroupChange(index, e)}
-                  />
-                </FormGroup>
-              )
-            )}
         </Form>
       </Modal.Body>
       <Modal.Footer>

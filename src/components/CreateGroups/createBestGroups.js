@@ -1,11 +1,10 @@
-import { getData, setData } from "../../firebase/utils";
-import minimizeGroupTimes from "../../utils/minimizeGroupTimes";
+import { getData, pushData, setData } from "../../firebase/utils";
 import getUsers from "../../firebase/getUsers";
 import minimizeTimes from "../../utils/minimizeTimes";
 
-const createBestGroups = async (swarmId, groupNames, numGroups) => {
+const createBestGroups = async (groupNames, numGroups) => {
   if (numGroups === 0) {
-    await setData(`/swarms/${swarmId}/subswarms`, null);
+    await setData(`currSwarm`, null);
     return;
   }
 
@@ -41,7 +40,6 @@ const createBestGroups = async (swarmId, groupNames, numGroups) => {
     });
   });
 
-
   // const minimizedGroups = minimizeGroupTimes(table, numGroups).groups;
   const minimizedGroups = minimizeTimes(table, numGroups).groups;
 
@@ -55,7 +53,17 @@ const createBestGroups = async (swarmId, groupNames, numGroups) => {
     groups[group].members.push(indexToId[index]);
   });
 
-  await setData(`swarms/${swarmId}/subswarms`, groups);
+  // await setData(`swarms/${swarmId}/subswarms`, groups);
+
+  const id = await pushData("swarms", {
+    name: "Swarm",
+    start_time: new Date().toISOString(),
+    subswarms: groups,
+  });
+
+  setData("currentSwarm", id.key);
+
+  return groups;
 };
 
 export default createBestGroups;

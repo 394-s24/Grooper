@@ -7,14 +7,15 @@ import { getDatabase, onValue, ref, update } from "firebase/database";
 import getUsers from "../../firebase/getUsers";
 import Table from "../../components/Table/Table";
 import EditMembers from "../../components/EditMembers/EditMembers";
+import { setData, pushData } from "../../firebase/utils";
+import getCurrSwarm from "./getSwarm";
 
 const Home = () => {
   const [subgroups, setSubgroups] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
   const [names, setNames] = useState([]);
-  const [startTime, setStartTime] = useState(null);
-  const [endTime, setEndTime] = useState(null);
+  const [currSwarm, setCurrSwarm] = useState(null);
 
   useEffect(() => {
     getUsers().then((users) => {
@@ -22,52 +23,53 @@ const Home = () => {
     });
 
     const db = getDatabase();
+    const currentSwarmRef = ref(db, `currentSwarm`);
 
-    const subgroupsRef = ref(db, "swarms/-NxK37qfhhv5HqlXvWQc/subswarms");
-    const startTimeRef = ref(db, "swarms/-NxK37qfhhv5HqlXvWQc/start_time");
-    const endTimeRef = ref(db, "swarms/-NxK37qfhhv5HqlXvWQc/end_time");
-
-    const unsubscribeSubgroups = onValue(subgroupsRef, (snapshot) => {
-      const data = snapshot.val();
-      if (data) {
-        setSubgroups(Object.values(data));
-      } else {
-        setSubgroups([]);
+    const unsubscribeCurrentSwarm = onValue(currentSwarmRef, (snapshot) => {
+      if (!snapshot.exists()) {
+        setCurrSwarm(null);
+        return;
       }
+
+      getCurrSwarm(snapshot.val()).then((currSwarm) =>
+        setCurrSwarm({ id: snapshot.val(), ...currSwarm })
+      );
     });
 
-    const unsubscribeStartTime = onValue(startTimeRef, (snapshot) => {
-      setStartTime(snapshot.val());
-    });
+    // const subgroupsRef = ref(db, `swarms/${currSwarm}/subswarms`);
+    // const startTimeRef = ref(db, `swarms/${currSwarm}/start_time`);
 
-    const unsubscribeEndTime = onValue(endTimeRef, (snapshot) => {
-      setEndTime(snapshot.val());
-    });
+    // const unsubscribeSubgroups = onValue(subgroupsRef, (snapshot) => {
+    //   const data = snapshot.val();
+    //   if (data) {
+    //     setSubgroups(Object.values(data));
+    //   } else {
+    //     setSubgroups([]);
+    //   }
+    // });
+
+    // const unsubscribeStartTime = onValue(startTimeRef, (snapshot) => {
+    //   setStartTime(snapshot.val());
+    // });
 
     return () => {
-      unsubscribeSubgroups();
-      unsubscribeStartTime();
-      unsubscribeEndTime();
+      unsubscribeCurrentSwarm();
     };
   }, []);
 
-  const handleStartStop = () => {
-    const db = getDatabase();
-    const updates = {};
+  const started = currSwarm !== null;
 
-    if (endTime === null) {
-      updates["/swarms/-NxK37qfhhv5HqlXvWQc/end_time"] = new Date().toISOString();
-    } else {
-      updates["/swarms/-NxK37qfhhv5HqlXvWQc/start_time"] = new Date().toISOString();
-      updates["/swarms/-NxK37qfhhv5HqlXvWQc/end_time"] = null;
+  const handleStartStop = async () => {
+    if (started) {
+      setData(`swarms/${currSwarm.id}/end_time`, new Date().toISOString());
+      setData("currentSwarm", null);
+      setSubgroups([]);
     }
-
-    update(ref(db), updates);
   };
 
   return (
     <div id="home-container">
-      <div id="title">GROOPS!</div>
+      <div id="title">GROOPER</div>
       <div id="home-buttons">
         <Button variant="primary" onClick={() => setShowModal(true)}>
           Create Tasks
@@ -77,25 +79,31 @@ const Home = () => {
         <Table
           names={names}
           title="Members"
-          headerButton={
-            <Button variant="primary" onClick={() => setShowEditModal(true)}>
-              Edit
-            </Button>
-          }
+          // headerButton={
+          //   <Button variant="primary" onClick={() => setShowEditModal(true)}>
+          //     Edit
+          //   </Button>
+          // }
         />
-        {subgroups.map((subgroup, idx) => (
+        {currSwarm?.subswarms?.map((subgroup, idx) => (
           <Subgroup key={idx} subgroup={subgroup} />
         ))}
       </div>
       <div id="home-buttons">
-        <Button 
-        variant={endTime === null ? "danger" : "success"}
-        onClick={handleStartStop}>
-          {endTime === null ? "Stop Swarm" : "Start Swarm"}
-        </Button>
+        {currSwarm?.subswarms?.length > 0 && (
+          <Button
+            variant={started === true ? "danger" : "success"}
+            onClick={handleStartStop}
+          >
+            {started === true ? "Stop Swarm" : "Start Swarm"}
+          </Button>
+        )}
       </div>
-      {/* <Regroup /> */}
-      <CreateGroups showModal={showModal} setShowModal={setShowModal} names={names}/>
+      <CreateGroups
+        showModal={showModal}
+        setShowModal={setShowModal}
+        names={names}
+      />
       <EditMembers showModal={showEditModal} setShowModal={setShowEditModal} />
     </div>
   );

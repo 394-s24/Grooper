@@ -1,9 +1,9 @@
 import { getData } from "../../firebase/utils";
 
-const getSwarm = async () => {
-  const swarmSnapshot = await getData(`swarms/-NxK37qfhhv5HqlXvWQc`);
+const getSwarm = async (id) => {
+  const swarm = await getData(`swarms/${id}`);
 
-  return swarmSnapshot.val();
+  return swarm.val();
 };
 
 export default getSwarm;

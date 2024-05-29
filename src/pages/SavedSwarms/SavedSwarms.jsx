@@ -1,19 +1,33 @@
-import React, { useState, useEffect } from 'react';
-import { Card, Accordion, Button } from 'react-bootstrap';
-import getAllSwarms from './getAllSwarms';
+import React, { useState, useEffect } from "react";
+import { Card, Accordion } from "react-bootstrap";
+import getAllSwarms from "./getAllSwarms";
+import getNameFromId from "../../firebase/getNameFromId";
 
 const SwarmDisplay = () => {
   const [swarms, setSwarms] = useState([]);
 
   useEffect(() => {
-    const fetchSwarms = async () => {
-      const swarmsData = await getAllSwarms();
-      if (swarmsData) {
-        setSwarms(Object.entries(swarmsData).map(([id, data]) => ({ id, ...data })));
-      }
-    };
-    console.log("fetching swarms");
-    fetchSwarms();
+    (async () =>
+      getAllSwarms().then(async (swarmsData) => {
+        await Promise.all(
+          swarmsData.map(async (swarm) => {
+            await Promise.all(
+              swarm.subswarms.map(async (subswarm) => {
+                subswarm.members = await Promise.all(
+                  subswarm.members.map(async (id) => {
+                    return { id, name: await getNameFromId(id) };
+                  })
+                );
+              })
+            );
+          })
+        );
+        setSwarms(
+          swarmsData.sort(
+            (a, b) => new Date(b.start_time) - new Date(a.start_time)
+          )
+        );
+      }))();
   }, []);
 
   return (
@@ -21,28 +35,44 @@ const SwarmDisplay = () => {
       {swarms.length > 0 ? (
         <Accordion defaultActiveKey="0">
           {swarms.map((swarm, index) => (
-            <Card key={index}>
-              <Accordion.Toggle as={Card.Header} eventKey={`${index}`}>
-                {swarm.name} (Start: {swarm.start_time} - End: {swarm.end_time})
-              </Accordion.Toggle>
-              <Accordion.Collapse eventKey={`${index}`}>
+            <Accordion.Item key={`${swarm}-${index}`} eventKey={index}>
+              <Accordion.Header>
+                {swarm.name} -{" "}
+                {new Date(swarm.start_time).toLocaleString([], {
+                  dateStyle: "short",
+                  timeStyle: "short",
+                })}{" "}
+                {swarm.end_time && (
+                  <>
+                    to{" "}
+                    {new Date(swarm.end_time).toLocaleString([], {
+                      timeStyle: "short",
+                    })}
+                  </>
+                )}
+              </Accordion.Header>
+              <Accordion.Collapse eventKey={index}>
                 <Card.Body>
-                  {swarm.subswarms && Object.entries(swarm.subswarms).map(([subId, subData]) => (
-                    <Card key={subId}>
-                      <Card.Header>Subswarm ID: {subId}</Card.Header>
-                      <Card.Body>
-                        <p>Topic: {subData.topic}</p>
-                        <p>Members: {subData.members.join(', ')}</p>
-                      </Card.Body>
-                    </Card>
-                  ))}
+                  {swarm.subswarms &&
+                    Object.entries(swarm.subswarms).map(([subId, subData]) => (
+                      <Card key={subId}>
+                        <Card.Header>{subData.topic}</Card.Header>
+                        <Card.Body>
+                          {subData.members.map((member) => (
+                            <div key={`${subId}-${member.id}`}>
+                              {member.name}
+                            </div>
+                          ))}
+                        </Card.Body>
+                      </Card>
+                    ))}
                 </Card.Body>
               </Accordion.Collapse>
-            </Card>
+            </Accordion.Item>
           ))}
         </Accordion>
       ) : (
-        <p>No swarms available.</p>
+        <div>No swarms available.</div>
       )}
     </div>
   );
