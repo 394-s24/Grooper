@@ -36,22 +36,6 @@ const Home = () => {
       );
     });
 
-    // const subgroupsRef = ref(db, `swarms/${currSwarm}/subswarms`);
-    // const startTimeRef = ref(db, `swarms/${currSwarm}/start_time`);
-
-    // const unsubscribeSubgroups = onValue(subgroupsRef, (snapshot) => {
-    //   const data = snapshot.val();
-    //   if (data) {
-    //     setSubgroups(Object.values(data));
-    //   } else {
-    //     setSubgroups([]);
-    //   }
-    // });
-
-    // const unsubscribeStartTime = onValue(startTimeRef, (snapshot) => {
-    //   setStartTime(snapshot.val());
-    // });
-
     return () => {
       unsubscribeCurrentSwarm();
     };
@@ -79,11 +63,6 @@ const Home = () => {
         <Table
           names={names}
           title="Members"
-          // headerButton={
-          //   <Button variant="primary" onClick={() => setShowEditModal(true)}>
-          //     Edit
-          //   </Button>
-          // }
         />
         {currSwarm?.subswarms?.map((subgroup, idx) => (
           <Subgroup key={idx} subgroup={subgroup} />

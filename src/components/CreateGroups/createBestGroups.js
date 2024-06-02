@@ -40,7 +40,6 @@ const createBestGroups = async (groupNames, numGroups) => {
     });
   });
 
-  // const minimizedGroups = minimizeGroupTimes(table, numGroups).groups;
   const minimizedGroups = minimizeTimes(table, numGroups).groups;
 
   const groups = groupNames.map((groupName, idx) => ({
@@ -52,8 +51,6 @@ const createBestGroups = async (groupNames, numGroups) => {
   minimizedGroups.map(async (group, index) => {
     groups[group].members.push(indexToId[index]);
   });
-
-  // await setData(`swarms/${swarmId}/subswarms`, groups);
 
   const id = await pushData("swarms", {
     name: "Swarm",

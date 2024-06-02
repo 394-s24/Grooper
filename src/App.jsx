@@ -2,8 +2,8 @@ import { useState } from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import "./App.css";
 import Home from "./pages/Home/Home";
-import SavedSwarms from "./pages/SavedSwarms/SavedSwarms"; // Make sure this is uncommented
-import BottomNavbar from "./components/BottomNavBar/BottomNavBar"; // Adjust the path as needed
+import SavedSwarms from "./pages/SavedSwarms/SavedSwarms";
+import BottomNavbar from "./components/BottomNavBar/BottomNavBar";
 
 const App = () => {
   return (
@@ -12,7 +12,6 @@ const App = () => {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/swarm" element={<SavedSwarms />} />
-          {/* Add other routes as needed */}
         </Routes>
         <BottomNavbar />
       </div>

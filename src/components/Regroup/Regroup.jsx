@@ -2,14 +2,12 @@ import { Button } from "react-bootstrap";
 import minimizeGroupTimes from "./AssignGroups";
 
 export default function Regroup() {
-  // Example usage:
   const times = [
     [0, 2, 3, 4, 1],
     [2, 0, 5, 1, 2],
     [3, 5, 0, 2, 3],
     [4, 1, 2, 0, 4],
     [3, 1, 3, 1, 0],
-
   ];
   const k = 2;
   const result = minimizeGroupTimes(times, k);
@@ -24,8 +22,3 @@ export default function Regroup() {
     </div>
   );
 }
-// const Regroup = () => {
-//   return <Button>Regroup</Button>;
-// };
-
-// export default GroupAssignment();
