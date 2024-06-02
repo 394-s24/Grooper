@@ -43,8 +43,8 @@
     <li>
       <a href="#getting-started">Getting Started</a>
       <ul>
-        <li><a href="#prerequisites">Prerequisites</a></li>
         <li><a href="#installation">Installation</a></li>
+        <li><a href="#setting-up-firebase">Setting up Firebase</a></li>
       </ul>
     </li>
     <li><a href="#known-bugs">Known Bugs</a></li>
@@ -80,27 +80,37 @@ Grooper will divide up your team members evenly into these groups, putting membe
 <!-- GETTING STARTED -->
 ## Getting Started
 
-
-### Prerequisites
-
-This is an example of how to list things you need to use the software and how to install them.
-* npm
-  ```sh
-  npm install npm@latest -g
-  ```
-
 ### Installation
-
-_Below is an example of how you can instruct your audience on installing and setting up your app. This template doesn't rely on any external dependencies or services._
 
 1. Clone the repo
    ```sh
-   git clone https://github.com/your_username_/Project-Name.git
+   git clone git@github.com:394-s24/Grooper.git
    ```
 2. Install NPM packages
    ```sh
    npm install
    ```
+
+### Setting up Firebase
+
+1. Login to firebase.
+    ```
+   firebase login
+   ```
+2. Initialize firebase
+    ```
+   firebase init
+   ```
+
+* What Firebase features do you want? Pick 
+    - Database for the Realtime Database
+    - Hosting if you want to deploy your web app onto the Firebase server
+    - Firestore if you want to store images
+* What Firebase project to connect to? Pick the one you created. If you don't see it, follow these instructions.
+* What is your public directory? Enter dist. Do not accept the default value "public".
+* Is this a single page webapp? Say Yes.
+* Overwrite dist/index.html? Say No.
+* Add Github Integration. Say No. If you need to do this, see these instructions.
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
